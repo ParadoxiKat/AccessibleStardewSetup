@@ -1,0 +1,49 @@
+{
+  "download_info": {
+    "&SMAPI": {
+      "repository": "Pathoschild/SMAPI",
+      "is_mandatory": true,
+      "asset_selector": {
+        "name": "For D&evelopers",
+        "pattern": "^.*-for-developers.zip$",
+        "match": false
+      }
+    },
+    "&Kokoro": {
+      "repository": "Shockah/Stardew-Valley-Mods",
+      "is_mandatory": true,
+      "release_title_filter": "^Kokoro"
+    },
+    "Project&Fluent": {
+      "repository": "Shockah/Stardew-Valley-Mods",
+      "is_mandatory": true,
+      "release_title_filter": "^Project Fluent"
+    },
+    "Stardew-&Access": {
+      "repository": "khanshoaib3/stardew-access",
+      "is_mandatory": true,
+      "asset_selector": {
+        "name": "&Debug Build",
+        "pattern": ".*-debug.zip$",
+        "match": false
+      },
+      "offer_prerelease": true,
+      "include_prerelease": true
+    }
+  },
+  "sdv_path_info": {
+    "windows": [
+      "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Stardew Valley",
+      "C:\\Program Files\\ModifiableWindowsApps\\Stardew Valley",
+      "C:\\Program Files (x86)\\GOG Galaxy\\Games\\Stardew Valley"
+    ],
+    "macOS": [
+      "~/Library/Application Support/Steam/SteamApps/common/Stardew Valley/Contents/MacOS",
+      "/Applications/Stardew Valley.app/Contents/MacOS"
+    ],
+    "linux": [
+      "~/.local/share/Steam/steamapps/common/Stardew Valley",
+      "~/GOGGames/StardewValley/game"
+    ]
+  }
+}
