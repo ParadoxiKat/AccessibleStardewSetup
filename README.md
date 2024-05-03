@@ -7,14 +7,15 @@ Accessible Stardew Setup is a simple installation wizard designed to help users 
 - screen reader-accessible graphical interface
 - installs Stardew Access & dependencies automatically
 - optionally modifies Steam launch options for windows users
+- optionally installs convenience desktop shortcuts to the Stardew Valley Mods folder, the stardew Access documentation and the Stardew Valley Wiki.
 
 ## About
 
-For most players, Stardew Valley is accessible upon installation. For blind players, this is not true. Installing Stardew Access is a requirement to enjoy Stardew Valley, but installing mods can be daunting for blind players, especially those who are new to gaming. Accessible Stardew Setup aims to give blind players an easy way to install the minimum requirement of mods and enjoy Stardew Valley with as few frustrations as possible. This installer will install SMAPI, Kokoro, Project Fluent and Stardew Access. It will also facilitate modifying game launch options for Steam if desired. Players are welcome to install all of these mods manually, and all are free to install additional mods manually as well.
+For most players, Stardew Valley is accessible upon installation. For blind players, this is not true. Installing Stardew Access is a requirement to enjoy Stardew Valley, but installing mods can be daunting for blind players, especially those who are new to gaming. Accessible Stardew Setup aims to give blind players an easy way to install the minimum requirement of mods and enjoy Stardew Valley with as few frustrations as possible. This installer will install SMAPI, Kokoro, Project Fluent and Stardew Access. It will also facilitate modifying game launch options for Steam on windows if desired, as well as several convenience desktop shortcuts. Players are welcome to install all of these mods manually, and all are free to install additional mods manually as well.
 
 ## Download
 
-[**Get ASS now**](https://github.com/ParadoxiKat/AccessibleStardewSetup/releases)
+[**Get ASS now**](https://github.com/ParadoxiKat/AccessibleStardewSetup/releases/latest)
 
 ## Prerequisites
 
