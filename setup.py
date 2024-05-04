@@ -3,7 +3,7 @@ from cx_Freeze import setup, Executable
 # Dependencies are automatically detected, but some modules need manual inclusion
 build_exe_options = {
     "zip_include_packages": ["ASS", "wx"],
-    "packages": ["ASS", "appdirs", "github", "json", "os", "psutil", "python-dotenv", "pywin32", "requests", "shutil", "sys", "vdf", "wx"],  # List additional packages to include
+    "packages": ["ASS", "appdirs", "dotenv", "github", "json", "os", "psutil", "pywin", "requests", "shutil", "sys", "vdf", "wx"],  # List additional packages to include
     "excludes": ["asyncio", "concurrent", "curses", "html", "multiprocessing", "PIL", "pip", "pkg_resources", "pycparser", "pydoc_data", "setuptools", "tkinter", "tomllib", "wheel", "xml", "xmlrpc"],    # Exclude modules you don't need
     "include_files": ['data/']  # Include any files, such as data folders
 }
