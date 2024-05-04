@@ -57,8 +57,9 @@ class SteamLaunchOptionsPanel(BasePanel):
 					configs[name] = {"path": config_path, "data": lconfig}
 				self._configs = configs
 			except Exception as e:
-				logger.debug(f"Failed to modify steam launch options due to: {e}")
-				raise
+				msg = f"Failed to modify steam launch options due to: {e}; accounts: {[accountid for accountid  in os.listdir(self.steam_userdata_path)]}"
+				logger.debug(msg)
+				self.GetParent().dump_log(msg)
 		return self._configs
 
 	@property
@@ -127,13 +128,16 @@ class SteamLaunchOptionsPanel(BasePanel):
 				lconfig = info['data']
 				lconfig["UserLocalConfigStore"]["Software"]["Valve"]["Steam"]["apps"][self.appid]['LaunchOptions'] = self.launch_options
 			except Exception as E:
-				logger.exception("Failed adding launch options to config")
-				raise
+				msg = f"Failed adding launch options to config due to {e}"
+				logger.exception(msg)
+				self.GetParent().dump_log(msg)
 			try:
 				shutil.copy2(path, path+".bak")
 			except Exception as e:
-				logger.exception(f"Failed to back up {path}")
-				raise
+				msg = f"Failed to back up {path} due to {e}"
+				logger.exception(msg)
+				self.GetParent().dump_log(msg)
+
 			with open(path, 'w', encoding='utf-8', newline='') as f:
 				vdf.dump(lconfig, f, pretty=True)
 

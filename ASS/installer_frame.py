@@ -117,3 +117,9 @@ class InstallerFrame(wx.Frame):
 		if dialog.ShowModal() == wx.ID_YES:
 			self.Close()
 		dialog.Destroy()
+
+	def dump_log(self, message=None):
+		from ASS.dump_log_dialog import DumpLogDialog
+		dlg = DumpLogDialog(self, wx.ID_ANY, "Error!!!", message=message)
+		dlg.ShowModal()
+		dlg.Destroy()
