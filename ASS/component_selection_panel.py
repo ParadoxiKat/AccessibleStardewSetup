@@ -11,7 +11,7 @@ class ComponentSelectionPanel(BasePanel):
 		self.setup_ui()
 
 	def setup_ui(self):
-		self.instructions = wx.StaticText(self, label="Select optional components to install:")
+		self.instructions = wx.TextCtrl(self, value="Select optional components to install:\nPlease select from among the following installation options.\nNecessary components may not be disabled.", style=wx.TE_READONLY | wx.TE_MULTILINE)
 		self.main_sizer.Add(self.instructions, 0, wx.ALL | wx.EXPAND, 5)
 		self.instructions.SetFocus()
 

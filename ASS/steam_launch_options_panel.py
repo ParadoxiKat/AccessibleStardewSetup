@@ -4,9 +4,10 @@
 
 import logging
 import os
-from requests.structures import CaseInsensitiveDict
 import psutil 
+from requests.structures import CaseInsensitiveDict
 import shutil
+import time
 import vdf
 import wx
 
@@ -72,7 +73,7 @@ class SteamLaunchOptionsPanel(BasePanel):
 
 	def setup_ui(self):
 		# Instruction text
-		instruction_text = wx.StaticText(self, label="Would you like to attempt adding SMAPI launch options to Steam?\nPlease ensure Steam is exited before proceeding.")
+		instruction_text = wx.TextCtrl(self, value="Would you like to attempt adding SMAPI launch options to Steam?\nPlease ensure Steam is exited before proceeding.", style=wx.TE_READONLY | wx.TE_MULTILINE | wx.TE_AUTO_URL | wx.BORDER_NONE)
 		instruction_text.SetFocus()
 		self.main_sizer.Add(instruction_text, 0, wx.ALL | wx.EXPAND, 10)
 
@@ -97,28 +98,75 @@ class SteamLaunchOptionsPanel(BasePanel):
 		return False
 
 	def prompt_steam_exit(self):
-		"Prompt the user to exit Steam with a custom dialog."
+		"""Prompt the user to exit Steam with a custom dialog that's more accessible."""
 		dlg = wx.Dialog(self, title="Steam is running")
-		vbox = wx.BoxSizer(wx.VERTICAL)
-		msg = wx.StaticText(dlg, label="Please exit Steam to continue.")
-		vbox.Add(msg, flag=wx.ALL|wx.CENTER, border=10)
+		dlg.SetSizer(wx.BoxSizer(wx.VERTICAL))
+		
+		# Accessible message box using read-only TextCtrl
+		msg = wx.TextCtrl(dlg, value="Please exit Steam to continue with the installation.", style=wx.TE_READONLY | wx.TE_MULTILINE)
+		msg.SetBackgroundColour(dlg.GetBackgroundColour())  # Make it blend with the dialog
+		msg.SetForegroundColour(dlg.GetForegroundColour())
+		dlg.Sizer.Add(msg, proportion=1, flag=wx.EXPAND | wx.ALL, border=10)
+		msg.SetFocus()  # Set focus for better accessibility
+		
+		# Buttons
 		retry_btn = wx.Button(dlg, label="&Retry")
 		cancel_btn = wx.Button(dlg, label="&Cancel")
-		retry_btn.Bind(wx.EVT_BUTTON, lambda evt: self.retry_steam_check(dlg))
+		force_quit_btn = wx.Button(dlg, label="Force Quit Steam")
+		
+		retry_btn.Bind(wx.EVT_BUTTON, lambda evt: self.retry_steam_check(dlg, evt))
 		cancel_btn.Bind(wx.EVT_BUTTON, lambda evt: dlg.Destroy())
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		hbox.Add(retry_btn)
-		hbox.Add(cancel_btn, flag=wx.LEFT, border=5)
-		vbox.Add(hbox, flag=wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, border=10)
-		dlg.SetSizer(vbox)
+		force_quit_btn.Bind(wx.EVT_BUTTON, lambda evt: self.force_quit_steam(dlg, evt))
+		
+		# Layout for buttons
+		button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+		button_sizer.Add(retry_btn, proportion=0, flag=wx.ALL, border=5)
+		button_sizer.Add(force_quit_btn, proportion=0, flag=wx.ALL, border=5)
+		button_sizer.Add(cancel_btn, proportion=0, flag=wx.ALL, border=5)
+		dlg.Sizer.Add(button_sizer, proportion=0, flag=wx.ALIGN_CENTER | wx.ALL, border=10)
+		
+		dlg.Sizer.Fit(dlg)
 		dlg.ShowModal()
 
-	def retry_steam_check(self, dlg):
-		"Retry checking if Steam has been closed."
+	def force_quit_steam(self, dlg, event):
+		"""Force quit Steam and check if the process has been closed."""
+		steam_process = self._get_steam_process()
+		if steam_process:
+			steam_process.kill()
+			time.sleep(2)  # Wait for the process to exit
+			if not self.is_steam_running():
+				dlg.Destroy()
+				self.add_steam_launch_options()
+			else:
+				wx.MessageBox("Failed to close Steam. Please try again.", "Error", wx.OK | wx.ICON_ERROR)
+		else:
+			wx.MessageBox("Steam is not currently running.", "Error", wx.OK | wx.ICON_INFORMATION)
+
+	def retry_steam_check(self, dlg, event):
+		"""Retry checking if Steam has been closed, using a custom dialog for feedback."""
 		if not self.is_steam_running():
 			dlg.Destroy()
 			self.add_steam_launch_options()
-		# If Steam is still running, do nothing and let the user try to close it again.
+		else:
+			self.show_steam_still_running_dialog(dlg)
+
+	def show_steam_still_running_dialog(self, parent_dlg):
+		"""Show a custom dialog indicating Steam is still running."""
+		dlg = wx.Dialog(parent_dlg, title="Steam Running")
+		dlg.SetSizer(wx.BoxSizer(wx.VERTICAL))
+
+		msg = wx.TextCtrl(dlg, value="Steam is still running. Please close it to continue.", style=wx.TE_READONLY | wx.TE_MULTILINE)
+		msg.SetBackgroundColour(dlg.GetBackgroundColour())
+		msg.SetForegroundColour(dlg.GetForegroundColour())
+		dlg.Sizer.Add(msg, proportion=1, flag=wx.EXPAND | wx.ALL, border=10)
+		msg.SetFocus()
+
+		close_btn = wx.Button(dlg, label="&Close")
+		close_btn.Bind(wx.EVT_BUTTON, lambda evt: dlg.Destroy())
+		dlg.Sizer.Add(close_btn, proportion=0, flag=wx.ALIGN_CENTER | wx.ALL, border=10)
+
+		dlg.Sizer.Fit(dlg)
+		dlg.ShowModal()
 
 	def add_steam_launch_options(self):
 		"Add launch options to Steam."

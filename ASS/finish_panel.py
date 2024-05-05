@@ -20,7 +20,7 @@ class FinishPanel(BasePanel):
 		self.cancel_button.Enable(False)
 		
 		# Instruction text indicating completion
-		completion_text = wx.StaticText(self, label="Setup has completed successfully!")
+		completion_text = wx.TextCtrl(self, value="Setup has completed successfully!", style=wx.TE_READONLY | wx.TE_MULTILINE)
 		completion_text.SetFocus()
 		self.main_sizer.Add(completion_text, 0, wx.ALL | wx.CENTER, 10)
 
